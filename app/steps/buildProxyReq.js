@@ -1,26 +1,25 @@
 'use strict';
 
-var debug = require('debug')('express-http-proxy');
-var requestOptions = require('../../lib/requestOptions');
+const debug = require('debug')('express-http-proxy');
+const requestOptions = require('../../lib/requestOptions');
 
 function buildProxyReq(Container) {
-  var req = Container.user.req;
-  var res = Container.user.res;
-  var options = Container.options;
-  var host = Container.proxy.host;
+  const req = Container.user.req;
+  const res = Container.user.res;
+  const options = Container.options;
 
-  var parseBody = (!options.parseReqBody) ? Promise.resolve(null) : requestOptions.bodyContent(req, res, options);
-  var createReqOptions = requestOptions.create(req, res, options, host);
+  const parseBody = (!options.parseReqBody) ? Promise.resolve(null) : requestOptions.bodyContent(req, res, options);
+  const createReqOptions = requestOptions.create(req, res, options);
 
-  return new Promise(function(resolve) {
+  return new Promise(function (resolve) {
     Promise
-    .all([parseBody, createReqOptions])
-    .then(function(responseArray) {
-      Container.proxy.bodyContent = responseArray[0];
-      Container.proxy.reqBuilder = responseArray[1];
-      debug('proxy request options:\n', Container.proxy.reqBuilder);
-      resolve(Container);
-    });
+      .all([parseBody, createReqOptions])
+      .then(function (responseArray) {
+        Container.proxy.bodyContent = responseArray[0];
+        Container.proxy.reqBuilder = responseArray[1];
+        debug('proxy request options:\n', Container.proxy.reqBuilder);
+        resolve(Container);
+      });
   });
 }
 

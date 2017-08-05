@@ -4,30 +4,30 @@ var proxy = require('../');
 var startProxyTarget = require('./support/proxyTarget');
 var expect = require('chai').expect;
 
-describe('uses remote path', function() {
+describe('uses remote path', function () {
   'use strict';
 
   this.timeout(10000);
 
   var app = express();
   var proxyRoutes = ['/somePath/', '/somePath/longer/path', '/somePath/long/path/with/many/tokens'];
-  var proxyKeyPath = '/somePath';
   var server;
 
-  afterEach(function() {
+  afterEach(function () {
     server.close();
   });
 
-  proxyRoutes.forEach(function(path) {
-    it('uses path component from inbound request', function(done) {
+  proxyRoutes.forEach(function (path) {
+    it('uses path component from inbound request', function (done) {
 
-      var modifiedPath = path.replace(new RegExp(proxyKeyPath), '');
+      // var modifiedPath = path.replace(new RegExp(proxyKeyPath), '');
+      var modifiedPath = path;
 
       var proxyRouteFn = {
         method: 'get',
         path: modifiedPath,
-        fn: function(req, res) {
-          res.json({path: path, modifiedPath: modifiedPath});
+        fn: function (req, res) {
+          res.json({ path: path, modifiedPath: modifiedPath });
         }
       };
 
@@ -38,7 +38,7 @@ describe('uses remote path', function() {
       request(app)
         .get(path)
         .expect(200)
-        .end(function(err, response) {
+        .end(function (err, response) {
           if (err) {
             return done(err);
           }
@@ -52,7 +52,7 @@ describe('uses remote path', function() {
 });
 
 
-describe('host can be a dynamic function', function() {
+describe('host can be a dynamic function', function () {
   'use strict';
 
   this.timeout(10000);
@@ -63,33 +63,33 @@ describe('host can be a dynamic function', function() {
   var firstPort = 10031;
   var secondPort = 10032;
 
-  app.use('/proxy/:port', proxy(function(req) {
+  app.use('/proxy/:port', proxy(function (req) {
     return 'localhost:' + req.params.port;
   }, {
-    memoizeHost: false
-  }));
+      memoizeHost: false
+    }));
 
-  firstProxyApp.use('/', function(req, res) {
+  firstProxyApp.use('/', function (req, res) {
     res.sendStatus(204);
   });
   firstProxyApp.listen(firstPort);
 
-  secondProxyApp.use('/', function(req, res) {
+  secondProxyApp.use('/', function (req, res) {
     res.sendStatus(200);
   });
   secondProxyApp.listen(secondPort);
 
-  it('can proxy with session value', function(done) {
+  it('can proxy with session value', function (done) {
     request(app)
       .get('/proxy/' + firstPort)
       .expect(204)
-      .end(function(err) {
+      .end(function (err) {
         if (err) {
           return done(err);
         }
         request(app)
-            .get('/proxy/' + secondPort)
-            .expect(200, done);
+          .get('/proxy/' + secondPort)
+          .expect(200, done);
       });
   });
 });

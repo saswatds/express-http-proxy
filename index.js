@@ -15,28 +15,28 @@
 // *: Update/add tests to unit test workflow steps independently
 // complete: update docs and release
 
-var ScopeContainer = require('./lib/scopeContainer');
-var assert = require('assert');
-var debug = require('debug')('express-http-proxy');
+const ScopeContainer = require('./lib/scopeContainer');
+const assert = require('assert');
+const debug = require('debug')('express-http-proxy');
 
-var buildProxyReq                = require('./app/steps/buildProxyReq');
-var copyProxyResHeadersToUserRes = require('./app/steps/copyProxyResHeadersToUserRes');
-var decorateProxyReqBody         = require('./app/steps/decorateProxyReqBody');
-var decorateProxyReqOpts         = require('./app/steps/decorateProxyReqOpts');
-var decorateUserRes              = require('./app/steps/decorateUserRes');
-var maybeSkipToNextHandler       = require('./app/steps/maybeSkipToNextHandler');
-var prepareProxyReq              = require('./app/steps/prepareProxyReq');
-var resolveProxyHost             = require('./app/steps/resolveProxyHost');
-var resolveProxyReqPath          = require('./app/steps/resolveProxyReqPath');
-var sendProxyRequest             = require('./app/steps/sendProxyRequest');
-var sendUserRes                  = require('./app/steps/sendUserRes');
+const buildProxyReq = require('./app/steps/buildProxyReq');
+const copyProxyResHeadersToUserRes = require('./app/steps/copyProxyResHeadersToUserRes');
+const decorateProxyReqBody = require('./app/steps/decorateProxyReqBody');
+const decorateProxyReqOpts = require('./app/steps/decorateProxyReqOpts');
+const decorateUserRes = require('./app/steps/decorateUserRes');
+const maybeSkipToNextHandler = require('./app/steps/maybeSkipToNextHandler');
+const prepareProxyReq = require('./app/steps/prepareProxyReq');
+const resolveProxyHost = require('./app/steps/resolveProxyHost');
+const resolveProxyReqPath = require('./app/steps/resolveProxyReqPath');
+const sendProxyRequest = require('./app/steps/sendProxyRequest');
+const sendUserRes = require('./app/steps/sendUserRes');
 
 module.exports = function proxy(host, userOptions) {
   assert(host, 'Host should not be empty');
 
   return function handleProxy(req, res, next) {
     debug('handleProxy called on ' + req.path);
-    var container = new ScopeContainer(req, res, next, host, userOptions);
+    const container = new ScopeContainer(req, res, next, host, userOptions);
 
     // Skip proxy if filter is falsey.  Loose equality so filters can return
     // false, null, undefined, etc.
