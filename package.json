@@ -16,10 +16,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/villadora/express-http-proxy.git"
+    "url": "git://github.com/saswatds/express-resolve-proxy.git"
   },
   "keywords": [
-    "express-http-proxy"
+    "express-resolve-proxy",
+    "http-proxy",
+    "resolveSrv",
+    "dynamic-host"
   ],
   "author": {
     "name": "villadora",
@@ -27,7 +30,7 @@
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/villadora/express-http-proxy/issues"
+    "url": "https://github.com/saswatds/express-resolve-proxy/issues"
   },
   "devDependencies": {
     "body-parser": "^1.17.1",
